@@ -1,2 +1,4 @@
 __pycache__
 email_credentials.py
+credentials.json
+token.json
