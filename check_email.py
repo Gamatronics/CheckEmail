@@ -42,19 +42,36 @@ def main():
         results = service.users().messages().list(userId='me',labelIds=['INBOX'], q='is:unread').execute()
         messagesList = results.get('messages',[])
         counter = 0 #check 10 emails
-        for msg in messagesList:
-            messagesGet = service.users().messages().get(userId='me', id=msg['id']).execute()
-            counter+=1
+        #for msg in messagesList:
+        #    messagesGet = service.users().messages().get(userId='me', id=msg['id']).execute()
+        #    counter+=1
         #print(messagesList[0])
         #print(messagesGet['payload']['headers'])
         #print(messagesGet['payload']['headers'][22]['value'])
         #quit()
-            
+        for message in messagesList:
+            messagesGet = service.users().messages().get(userId='me', id=message['id']).execute()
+            emailData = messagesGet['payload']['headers']
+            for values in emailData:
+                print("VALUES!!!",values)
+                input()
+                print("EMAILDATA!!!!",emailData)
+                input()
+                print("MESSAGESGET!!!!",messagesGet)
+                input()
+                name = values['name']
+                if name == "From":
+                    from_name = values['value']
+                    print("You have a new message from:",from_name)
+                    print(messagesGet['snippet'][:50])
+                    quit()
+            quit()
             for x in range(len(messagesGet['payload']['headers'])):
                 
                 #print(messagesGet['payload']['headers'][x]['name'])
                 if messagesGet['payload']['headers'][x]['name'] == 'Subject':
                     subject = messagesGet['payload']['headers'][x]['value']
+                    print(messagesGet['payload']['headers'][x]['snippet'])
                     if subject == 'Gast, see your April updates.':
                         print('Found the right email')
                         quit()
