@@ -41,10 +41,29 @@ def main():
         #labels = results.get('labels', [])
         results = service.users().messages().list(userId='me',labelIds=['INBOX'], q='is:unread').execute()
         messagesList = results.get('messages',[])
-        messagesGet = service.users().messages().get(userId='me', id=messagesList[0]['id']).execute()
-        print(messagesList[0])
-        for x in range(len(messagesGet['payload']['headers'])):
-            print(messagesGet['payload']['headers'][x]['name'])
+        counter = 0 #check 10 emails
+        for msg in messagesList:
+            messagesGet = service.users().messages().get(userId='me', id=msg['id']).execute()
+            counter+=1
+        #print(messagesList[0])
+        #print(messagesGet['payload']['headers'])
+        #print(messagesGet['payload']['headers'][22]['value'])
+        #quit()
+            
+            for x in range(len(messagesGet['payload']['headers'])):
+                
+                #print(messagesGet['payload']['headers'][x]['name'])
+                if messagesGet['payload']['headers'][x]['name'] == 'Subject':
+                    subject = messagesGet['payload']['headers'][x]['value']
+                    if subject == 'Gast, see your April updates.':
+                        print('Found the right email')
+                        quit()
+                    print('Subject:',subject)
+            if counter > 10: 
+                print("no hay nada en los primeros diez", counter)
+                break
+
+
 
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
