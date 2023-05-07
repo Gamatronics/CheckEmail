@@ -18,6 +18,7 @@ The system gives you a password that you need to use to authenticate from python
 # Importing libraries
 import imaplib
 import email
+import re
 
 import yaml  #To load saved login credentials from a yaml file
 
@@ -76,7 +77,20 @@ for msg in msgs[::-1]:
             print ("from:", my_msg['from'])
             print ("body:")
             for part in my_msg.walk():  
-                #print(part.get_content_type())
+                print(part.get_content_type())
                 if part.get_content_type() == 'text/plain':
-                    print (part.get_payload())
+                    print(part.get_payload())
+                    body = part.get_payload()
+                    print(body)
+
+#body = "AMZN,BA,BABA,META"
+try:
+    first_line = re.search("^.*$",body,re.MULTILINE)
+    body = first_line.group().rstrip()
+    #print('first line',first_line.group())
+    tickers = body.split(',')
+    print(len(tickers), tickers)
+except:
+    pass
+
             
